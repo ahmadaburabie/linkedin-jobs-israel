@@ -245,8 +245,8 @@ class LinkedInScraper:
                 else:
                     combined_df = df
                 
-                # Remove duplicates
-                combined_df = combined_df.drop_duplicates(subset=['title', 'link'])
+                # Remove duplicates based on title and link
+                combined_df = combined_df.drop_duplicates(subset=['title', 'link'], keep='first')
                 
                 # Save to Excel with formatting
                 with pd.ExcelWriter(excel_file, engine='openpyxl') as writer:
@@ -275,25 +275,15 @@ class LinkedInScraper:
                         subprocess.run(['git', 'config', 'user.name', 'LinkedIn Job Scraper'], check=True)
                         subprocess.run(['git', 'config', 'user.email', 'scraper@example.com'], check=True)
                     
-                    # Add all relevant files
-                    print("Adding files to git...")
-                    files_to_add = [
-                        'config.py',
-                        'linkedin_scraper.py',
-                        'main.py',
-                        excel_file
-                    ]
-                    
-                    for file in files_to_add:
-                        if os.path.exists(file):
-                            subprocess.run(['git', 'add', file], check=True)
-                            print(f"Added {file} to git")
+                    # Add the Excel file
+                    print("Adding Excel file to git...")
+                    subprocess.run(['git', 'add', excel_file], check=True)
                     
                     # Check if there are changes to commit
                     status = subprocess.run(['git', 'status', '--porcelain'], capture_output=True, text=True)
                     if status.stdout.strip():
                         # Commit with timestamp
-                        commit_message = f"Update job listings and code - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+                        commit_message = f"Update job listings - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
                         subprocess.run(['git', 'commit', '-m', commit_message], check=True)
                         print("Successfully committed changes to git")
                         
