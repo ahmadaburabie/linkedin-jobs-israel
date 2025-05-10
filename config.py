@@ -26,7 +26,7 @@ JOB_KEYWORDS = [
     "computer science internship"
 ]
 
-LOCATION = "United States"
+LOCATION = "Israel"
 
 # File paths
 DATA_DIR = 'data'
